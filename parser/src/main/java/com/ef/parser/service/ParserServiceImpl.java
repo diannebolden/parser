@@ -23,12 +23,6 @@ public class ParserServiceImpl implements ParserService {
 	
 	@Autowired
 	AccessLogRepository accessLogRepository;
-	
-
-	@Override
-	public List<HourlyIp> findByIP(String ip) {
-		return this.hourlyRepository.findByIp(ip);
-	}
 
 	@Override
 	public void saveAllHourlyIp(List<HourlyIp> hourlyIps) {
@@ -43,6 +37,4 @@ public class ParserServiceImpl implements ParserService {
 	public List<AccessLog> findIpsByDateRangeAndThreshold(Date startDate, int duration, int threshold) {
 		return this.accessLogRepository.findByDateRangeAndThreshold(startDate, duration, threshold);
 	}
-
-	
 }

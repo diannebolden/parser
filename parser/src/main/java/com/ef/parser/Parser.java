@@ -20,7 +20,6 @@ import com.ef.parser.service.ParserService;
 import com.ef.parser.util.OptionRetriever;
 
 @SpringBootApplication
-//@ComponentScan(basePackages="com.ef")
 @ComponentScan({"com.ef.parser",
 				"com.ef.parser.controller",
 				"com.ef.parser.entity",
@@ -29,18 +28,15 @@ import com.ef.parser.util.OptionRetriever;
 				"com.ef.parser.service"
 				}
 )
-//@EnableJpaRepositories(basePackages="com.ef.repository")
-//@EntityScan(basePackages="com.ef.entity")
-public class ParserApplication implements CommandLineRunner{
+public class Parser implements CommandLineRunner{
 	private static final String BLOCKING_REASON = "IP %s exceeded the hourly %d requests threshold limit during the specified timeframe.";
 	private static final String IP_EXCEEDING_STR = "IPs exceeding %d requests threshold:";
-	private static final int ERROR_STATUS = 99;
 
 	private @Autowired ParserService parserService;
 	private @Autowired OptionRetriever optionRetriever;
 
 	public static void main(String[] args) {
-		SpringApplication app = new SpringApplication(ParserApplication.class);
+		SpringApplication app = new SpringApplication(Parser.class);
 		app.run(args);
 	}
 	

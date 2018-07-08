@@ -12,7 +12,6 @@ import com.ef.parser.domain.entity.HourlyIp;
 public interface ParserService {
 	public void saveAllHourlyIp(List<HourlyIp> hourlyIps);
 	public void saveAllDailyIp(List<DailyIp> dailyIps);
-	public List<HourlyIp> findByIP(String ip);
 	
 	public List<AccessLog> findIpsByDateRangeAndThreshold(@Param("startDate") Date startDate,
 														  @Param("duration") int duration,

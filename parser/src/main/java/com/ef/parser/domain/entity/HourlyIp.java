@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.ef.parser.util.validators.IpValidator;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +23,12 @@ public class HourlyIp implements Serializable {
     @Getter @Setter private String blockingReason;
     
 	public HourlyIp(String ip, String blockingReason) {
-		this.ip = ip;
-		this.blockingReason = blockingReason;
+		if(IpValidator.isIpValid(ip)) {
+			this.ip = ip;
+			this.blockingReason = blockingReason;
+    	}else {
+    		throw new IllegalArgumentException();
+    	}
 	}
 }	
 
