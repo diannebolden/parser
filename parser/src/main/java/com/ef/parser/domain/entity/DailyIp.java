@@ -1,13 +1,11 @@
 package com.ef.parser.domain.entity;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;

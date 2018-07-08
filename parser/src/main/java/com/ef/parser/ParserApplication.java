@@ -33,8 +33,9 @@ import com.ef.parser.util.OptionRetriever;
 //@EntityScan(basePackages="com.ef.entity")
 public class ParserApplication implements CommandLineRunner{
 	private static final String BLOCKING_REASON = "IP %s exceeded the hourly %d requests threshold limit during the specified timeframe.";
-	private static final String IP_EXCEEDING_STR = "IPs exceeding threshold:";
-	private static final int HOURLY = 1;
+	private static final String IP_EXCEEDING_STR = "IPs exceeding %d requests threshold:";
+	private static final int ERROR_STATUS = 99;
+
 	private @Autowired ParserService parserService;
 	private @Autowired OptionRetriever optionRetriever;
 
@@ -46,12 +47,14 @@ public class ParserApplication implements CommandLineRunner{
     @Override
     public void run(String... args) throws IOException, URISyntaxException, ParseException {
     	ParserOptions parserOptions = this.optionRetriever.retrieveOptions(args);
-
-    	List<AccessLog> ipsExceedingLimit =this.parserService.findIpsByDateRangeAndThreshold(
-    			parserOptions.getStartDate(),
-    			parserOptions.getDuration(),
-    			parserOptions.getThreshold());
-    	this.handleResults(ipsExceedingLimit, parserOptions);
+    	
+    	if (parserOptions != null) {
+	    	List<AccessLog> ipsExceedingLimit =this.parserService.findIpsByDateRangeAndThreshold(
+	    			parserOptions.getStartDate(),
+	    			parserOptions.getDuration(),
+	    			parserOptions.getThreshold());
+	    	this.handleResults(ipsExceedingLimit, parserOptions);
+    	}
     } 
     
     private void handleResults(List<AccessLog> ipsExceedingLimit, ParserOptions parserOptions) {
@@ -59,12 +62,12 @@ public class ParserApplication implements CommandLineRunner{
     	List<HourlyIp>hourlyIps = new ArrayList<HourlyIp>(numIpsExceedingLimit);
     	List<DailyIp>dailyIps =  new ArrayList<DailyIp>(numIpsExceedingLimit);
 
-    	System.out.println(IP_EXCEEDING_STR);
+    	System.out.println(String.format(IP_EXCEEDING_STR, parserOptions.getThreshold()));
     	for (AccessLog accessLog:ipsExceedingLimit) {
     		String accessLogIp = accessLog.getIp();
     		System.out.println(accessLogIp);
     		
-    		if (parserOptions.getDuration() == HOURLY) {
+    		if (parserOptions.getDuration() == ParserOptions.HOURLY) {
     			hourlyIps.add(new HourlyIp(accessLogIp,
   					  String.format(BLOCKING_REASON, accessLogIp, parserOptions.getThreshold())));
     		}else {
@@ -73,7 +76,7 @@ public class ParserApplication implements CommandLineRunner{
     		}
     		
     	}
-    	if (parserOptions.getDuration() == HOURLY) {
+    	if (parserOptions.getDuration() == ParserOptions.HOURLY) {
     		this.parserService.saveAllHourlyIp(hourlyIps);
     	}else {
     		this.parserService.saveAllDailyIp(dailyIps);
