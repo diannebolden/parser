@@ -15,9 +15,9 @@ public interface AccessLogRepository extends CrudRepository<AccessLog,Long> {
 	
 	@Query(value = "SELECT access_id, ip "
             + "FROM access_log "
-            + "where access_date BETWEEN :startDate and DATE_ADD(:startDate, INTERVAL :duration HOUR) "
+            + "WHERE access_date BETWEEN :startDate and DATE_ADD(:startDate, INTERVAL :duration HOUR) "
             + "GROUP BY ip "
-            + "having count(*) >=:threshold "
+            + "HAVING COUNT(*) >=:threshold "
             + "ORDER BY ip", nativeQuery=true)
 
     List<AccessLog> findByDateRangeAndThreshold(@Param("startDate") Date startDate,
